@@ -10,17 +10,17 @@
 
 PmergeMe::PmergeMe( std::string av ) {
 
-	// timeval start, end;
+	timeval start, end;
 
-	// //list
-	// gettimeofday(&start, NULL);
-	// // unsync the I/O of C and C++.
-    // std::ios_base::sync_with_stdio(false);
+	//list
+	gettimeofday(&start, NULL);
+	// unsync the I/O of C and C++.
+    std::ios_base::sync_with_stdio(false);
 	if( buildList(av) == false ) {
 
 		return;
 	}
-	// gettimeofday(&end, NULL);
+	// // gettimeofday(&end, NULL);
 
 	// double elapsedTime;
 
@@ -58,7 +58,7 @@ PmergeMe::~PmergeMe() {
 bool PmergeMe::isDigit(const std::string& numStr) {
 
     std::string::const_iterator it = numStr.begin();
-    while (it != numStr.end() && std::isdigit(*it) && *it != '0' )
+    while (it != numStr.end()) // && std::isdigit(*it) && *it != '0'
 		++it;
     return !numStr.empty() && it == numStr.end();
 }
@@ -93,15 +93,16 @@ bool PmergeMe::buildList(std::string av) {
 
 			log( "Usage: a positive integer sequence as argument");
 			return false;
-			
-		} else {
-
-			std::cout << BL << "Before:\t";
-			printList( _list );
-			std::cout << OR << "After:\t";
-			printList( _list );
-			return false;
 		}
+
+		// } else {
+
+		// 	std::cout << BL << "Before:\t";
+		// 	printList( _list );
+		// 	std::cout << OR << "After:\t";
+		// 	printList( _list );
+		// 	return false;
+		// }
 	}
 
 	std::cout << BL << "Ford Johnson Sort List" << std::endl;
@@ -160,7 +161,7 @@ void PmergeMe::printList( const std::list<int>& _list ) {
 //             break;
 //         }
 //     }
-	
+
 
 // 	// Print the pairs
 //     for (std::list<std::pair<int, int> >::iterator it = pairs.begin(); it != pairs.end(); it++ ) {
@@ -198,18 +199,18 @@ void PmergeMe::fordJohnsonSortList( std::list<int>& _list) {
             break;
         }
     }
-	
+
+    std::cout << "Print pairs: ";
 
 	// Print the pairs
     for (std::list<int>::iterator it = pairs.begin(); it != pairs.end(); it++ ) {
-     {
-            std::cout << *it << " ";
-			std::cout <<std::endl;
-        }
+
+		std::cout << *it << " ";
     }
+	std::cout << std::endl;
 	// mergeList( _list, left, right, straggler );
 	recursiveSort(pairs);
- 
+
 }
 
 std::list<int> PmergeMe:: build_large_list(std::list<int> &pairs, std::list<int> &sortedList)
@@ -241,40 +242,56 @@ std::list<int> PmergeMe:: build_large_list(std::list<int> &pairs, std::list<int>
 			break ;
 		}
     }
-	for (std::list<int>::iterator it = sortedList.begin(); it != sortedList.end(); it++ ) 
-     {
-            std::cout << "Large: " << *it << " ";
-			std::cout <<std::endl;
-    }
-	for (std::list<int>::iterator it = this->smallElements.begin(); it != this->smallElements.end(); it++ ) 
-     {
-            std::cout << "small: " << *it << " ";
-			std::cout <<std::endl;
-	 }
-	return (sortedList);
+	// for (std::list<int>::iterator it = sortedList.begin(); it != sortedList.end(); it++ )
+    //  {
+    //         std::cout << "Large: " << *it << " ";
+	// 		std::cout <<std::endl;
+    // }
+	// for (std::list<int>::iterator it = this->smallElements.begin(); it != this->smallElements.end(); it++ )
+    //  {
+    //         std::cout << "small: " << *it << " ";
+	// 		std::cout <<std::endl;
+	//  }
+	return (remainingElements);
 }
 
 void PmergeMe:: recursiveSort(std::list<int>& inputList) {
+
     if (inputList.size() <= 1) {
         return; // Base case: nothing to sort
     }
 
+    // std::cout << "1" << std::endl;
+
     std::list<int> sortedList;
+    // std::cout << "2" << std::endl;
 
     // Select larger elements and populate sortedPairs, leaving smaller elements in inputList
     std::list<int> remainingElements = build_large_list(inputList, sortedList);
+    // std::cout << "3" << std::endl;
 
     // Now, sortedPairs contains larger elements, and inputList contains remaining elements
     // Perform further processing or recursive sorting on sortedPairs if needed
 
     // Recursive call to sort remainingElements
     recursiveSort(remainingElements);
-	for (std::list<int>::iterator it =  remainingElements.begin(); it != remainingElements.end(); it++ ) 
+	// for (std::list<int>::iterator it =  remainingElements.begin(); it != remainingElements.end(); it++ )
+    //  {
+    //         std::cout << "remaining elements: " << *it << " ";
+	// 		std::cout <<std::endl;
+	//  }
+    // std::cout << "4" << std::endl;
+	sortedList.sort();
+	std::cout << "Sorted Large list: ";
+
+	for (std::list<int>::iterator it = sortedList.begin(); it != sortedList.end(); it++ )
      {
-            std::cout << "remaining elements: " << *it << " ";
+            std::cout << "Large: " << *it << " ";
 			std::cout <<std::endl;
-	 }
+    }
 	mergeList(inputList, sortedList, this->smallElements, 0);
+    // std::cout << "5" << std::endl;
+
 
     // Merge sortedPairs and remainingElements if necessary
     // (This depends on the specific algorithm you're implementing)
@@ -292,28 +309,72 @@ void PmergeMe::mergeList( std::list<int>& _list, std::list<int>& left, std::list
     std::list<int>::iterator large;
     std::list<int>::iterator small;
 
-	// for (std::list<int>::iterator it = right.begin(); it != right.end(); it++ ) 
+	 std::cout << "Large list: ";
+
+	// Print the pairs
+    for (std::list<int>::iterator it = left.begin(); it != left.end(); it++ ) {
+
+		std::cout << *it << " ";
+    }
+	std::cout << std::endl;
+
+	 std::cout << "Small list: ";
+
+	// Print the pairs
+    for (std::list<int>::iterator it = right.begin(); it != right.end(); it++ ) {
+
+		std::cout << *it << " ";
+    }
+	std::cout << std::endl;
+
+	for (small = right.begin(); small != right.end(); small++)
+	{
+		// std::cout << "small: " << *small << std::endl;
+
+		large = std::upper_bound(left.begin(), left.end(), *small);
+		// std::cout << "large: " << *large << std::endl;
+
+		if (large != left.end())
+		{
+			// std::cout << GR << "large: " << *large << std::endl;
+			// std::cout << "small: " << *small << std::endl;
+
+			// std::cout << RES;
+			left.insert(large, *small);
+			// ++large; // Update large to point to the beginning of left
+		}
+		else
+		{
+
+			left.push_back(*small); // Insert at the end if large is at the end
+			large = left.begin(); // Update large to point to the beginning of left
+		}
+	}
+		right.clear();
+
+	 std::cout << R << "Sorted list: ";
+
+	for (std::list<int>::iterator it = left.begin(); it != left.end(); ++it )
+     {
+            std::cout << *it << " ";
+	 }
+	std::cout <<std::endl;
+}
+	// large = left.begin();
+	// small = right.begin();
+	// if( *large >
+
+	// for (std::list<int>::iterator it = right.begin(); it != right.end(); it++ )
     //  {
-    //         std::cout << "before: " << *it << " ";
+    //         std::cout << "final: " << *it << " ";
 	// 		std::cout <<std::endl;
 	//  }
-	for (large = left.begin(); large != left.end(); ++large)
-	{
-		small = std::lower_bound(right.begin(), right.end(), *large, std::greater<int>());
-		right.assign(small, large);
-	}
-	for (std::list<int>::iterator it = right.begin(); it != right.end(); it++ ) 
-     {
-            std::cout << "final: " << *it << " ";
-			std::cout <<std::endl;
-	 }
 
     // for (itPair = _pairList.begin(); itPair != _pairList.end(); ++itPair)
     // {
     //     itPos = lower_bound(_mainList.begin(), _mainList.end(), itPair->first); //cherche le bon emplacement
     //     _mainList.insert(itPos, itPair->first); // inserer au bon endroit
     // }
-}
 
 
 template <class T> void swap ( T& a, T& b )
